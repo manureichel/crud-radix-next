@@ -1,11 +1,23 @@
 "use client"
 
-import { EnvelopeClosedIcon, LockClosedIcon } from "@radix-ui/react-icons";
+import { EnvelopeClosedIcon, LockClosedIcon, PersonIcon } from "@radix-ui/react-icons";
 import { Button, Flex, TextField } from "@radix-ui/themes";
 
-function SigninForm() {
+function SignupForm() {
   return (
     <Flex direction="column" gap="2">
+      <label htmlFor="name">Name:</label>
+      <TextField.Root>
+        <TextField.Slot>
+          <PersonIcon height="16" width="16" />
+        </TextField.Slot>
+        <TextField.Input
+          type="text"
+          placeholder="Ingrese su Nombre"
+          autoFocus
+        ></TextField.Input>
+      </TextField.Root>
+
       <label htmlFor="email">Email</label>
       <TextField.Root>
         <TextField.Slot>
@@ -27,12 +39,13 @@ function SigninForm() {
         <TextField.Input
           type="password"
           placeholder="*******"
+          autoFocus
         ></TextField.Input>
       </TextField.Root>
 
-      <Button>Sign In</Button>
+      <Button>Sign Up</Button>
     </Flex>
   )
 }
 
-export default SigninForm;
+export default SignupForm;
