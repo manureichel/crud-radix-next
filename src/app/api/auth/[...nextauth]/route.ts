@@ -27,7 +27,7 @@ const handler = NextAuth({
           
           return {
             id: userFound.id + "",
-            Name: userFound.name,
+            name: userFound.name,
             email: userFound.email
           }
       }
