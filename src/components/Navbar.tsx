@@ -6,7 +6,6 @@ import { CaretDownIcon } from "@radix-ui/react-icons"
 
 function Navbar() {
   const { data: session } = useSession();
-  console.log(session)
 
   return (
     <nav className="bg-zinc-950 py-4">
