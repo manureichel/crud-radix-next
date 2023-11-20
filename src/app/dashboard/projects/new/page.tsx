@@ -3,8 +3,12 @@
 import { TextField, TextArea, Button, Container, Card, Flex, Heading } from "@radix-ui/themes"
 import { useForm, Controller } from "react-hook-form"
 import axios from "axios"
+import { useRouter, useParams } from "next/navigation"
+import { TrashIcon } from "@radix-ui/react-icons"
 
 const TaskNewPage = () => {
+  const router = useRouter();
+  const params = useParams();
 
   const { control, handleSubmit } = useForm({
     values: {
@@ -14,7 +18,19 @@ const TaskNewPage = () => {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    const res = await axios.post("/api/projects", data);
+
+    if (!params.projectId) {
+      const res = await axios.post("/api/projects", data);
+      if (res.status === 201) {
+        router.push("/dashboard");
+        router.refresh();
+      }
+    } else {
+      console.log("editando..")
+      // const res = await axios.put("/api/projects", data);
+    }
+
+
   })
 
   return (
@@ -23,7 +39,9 @@ const TaskNewPage = () => {
         <Flex className="h-screen w-full items-center">
           <Card className="w-full p-7">
             <form onSubmit={onSubmit} className="flex flex-col gap-y-2">
-              <Heading>Crear nuevo proyecto</Heading>
+              <Heading>
+                {params.projectId ? "Editar Proyecto" : "Nuevo Proyecto"}
+              </Heading>
               <label>Título de Proyecto:</label>
               <Controller
                 control={control}
@@ -44,7 +62,12 @@ const TaskNewPage = () => {
                   )
                 }}
               />
-              <Button type="submit">Crear Proyecto</Button>
+              <Button type="submit">{params.projectId ? "Editar Proyecto" : "Guardar Proyecto"}</Button>
+              <div className="flex justify-end my-2">
+                {params.projectId &&
+                  <Button type="button" onClick={() => console.log("eliminando..")} color="red"><TrashIcon />Eliminar Proyecto</Button>
+                }
+              </div>
             </form>
           </Card>
         </Flex>
