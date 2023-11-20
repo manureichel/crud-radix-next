@@ -1,16 +1,18 @@
 "use client"
 
-import { TextField, TextArea, Button, Container, Card, Flex, Heading } from "@radix-ui/themes"
+import { TextField, TextArea, Button, Container, Card, Flex, Heading, colorProp } from "@radix-ui/themes"
 import { useForm, Controller } from "react-hook-form"
 import axios from "axios"
 import { useRouter, useParams } from "next/navigation"
 import { TrashIcon } from "@radix-ui/react-icons"
+import { toast } from 'sonner'
+import { useEffect } from "react"
 
 const TaskNewPage = () => {
   const router = useRouter();
   const params = useParams();
 
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, setValue } = useForm({
     values: {
       title: "",
       description: ""
@@ -18,7 +20,6 @@ const TaskNewPage = () => {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-
     if (!params.projectId) {
       const res = await axios.post("/api/projects", data);
       if (res.status === 201) {
@@ -26,12 +27,39 @@ const TaskNewPage = () => {
         router.refresh();
       }
     } else {
-      console.log("editando..")
-      // const res = await axios.put("/api/projects", data);
+      const res = await axios.put(`/api/projects/${params.projectId}`, data);
+      if (res.status === 200) {
+        toast.success("Contenido editado");
+        router.push("/dashboard");
+        router.refresh();
+      } else {
+        toast.error("Error: ")
+      }
     }
-
-
   })
+
+  async function handleDelete(projectId: string) {
+    const res = await axios.delete(`/api/projects/${projectId}`);
+
+    if (res.status === 200)
+      toast.success("Proyecto eliminado")
+    else {
+      toast.error("Error eliminando..")
+    }
+    router.push("/dashboard");
+    router.refresh();
+  }
+
+  useEffect(() => {
+    if (params.projectId) {
+      axios.get(`/api/projects/${params.projectId}`)
+        .then(res => {
+          setValue("title", res.data.title)
+          setValue("description", res.data.description)
+        })
+
+    }
+  }, [])
 
   return (
     <div>
@@ -65,7 +93,7 @@ const TaskNewPage = () => {
               <Button type="submit">{params.projectId ? "Editar Proyecto" : "Guardar Proyecto"}</Button>
               <div className="flex justify-end my-2">
                 {params.projectId &&
-                  <Button type="button" onClick={() => console.log("eliminando..")} color="red"><TrashIcon />Eliminar Proyecto</Button>
+                  <Button type="button" onClick={() => handleDelete(params.projectId as string)} color="red"><TrashIcon />Eliminar Proyecto</Button>
                 }
               </div>
             </form>
