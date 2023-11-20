@@ -8,8 +8,8 @@ const HeaderDashboard = () => {
 
   return (
     <div className='flex justify-between items-center mb-4'>
-      <Heading>Tasks</Heading>
-      <Button onClick={() => router.push("/dashboard/projects/new")}>Add Task</Button>
+      <Heading>Proyectos</Heading>
+      <Button onClick={() => router.push("/dashboard/projects/new")}>Agregar Proyecto</Button>
     </div>
   )
 }

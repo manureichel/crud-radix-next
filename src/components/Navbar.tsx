@@ -5,10 +5,12 @@ import { useSession, signOut } from "next-auth/react"
 import { CaretDownIcon } from "@radix-ui/react-icons"
 
 function Navbar() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  if (status === "loading") return null; // esto podría reemplazar por un skeleton abajo
 
   return (
-    <nav className="bg-zinc-950 py-4">
+    <nav className="bg-zinc-950 py-4 px-14 md:px-0'">
       <Container>
         <Flex justify="between" align="center">
           <NextLink href="/">

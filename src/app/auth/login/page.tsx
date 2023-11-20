@@ -3,12 +3,20 @@ import React from 'react'
 import { Container, Card, Heading, Flex, Text, Link } from '@radix-ui/themes'
 import SigninForm from '@/components/auth/SigninForm'
 import NavLink from 'next/link'
+import { getServerSession } from 'next-auth'
+import { authOptions } from "@/libs/authOptions"
+import { redirect } from 'next/navigation'
 
-function LoginPage() {
+async function LoginPage() {
+  const session = await getServerSession(authOptions);
+
+  if (session)
+    redirect("/dashboard")
+
   return (
     <>
       <Container size="1" height="100%" className='p-3 md:p-0 '>
-        <Flex className='h-screen w-full items-center'>
+        <Flex className='h-[calc(100vh-10rem)] w-full items-center'>
           <Card className='w-full p-7'>
             <Heading>Iniciar Sesión</Heading>
             <SigninForm />
@@ -18,12 +26,12 @@ function LoginPage() {
                 <NavLink href="/auth/register" passHref>Registrate</NavLink>
               </Link>
             </Flex>
-            <Flex justify="between">
+            {/* <Flex justify="between">
               <Text>¿Olvidaste tu contraseña?</Text>
               <Link asChild>
                 <NavLink href="/auth/register" passHref>Recuperar Cuenta</NavLink>
               </Link>
-            </Flex>
+            </Flex> */}
           </Card>
         </Flex>
       </Container >
